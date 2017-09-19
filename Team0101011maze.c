@@ -25,7 +25,7 @@ void goForward()
 
 void findLine()
 {
-	  while (SensorValue(light) > 65)
+	  while (SensorValue(light) > 85)
 		{
     		goForward();
 		}
@@ -37,7 +37,7 @@ task main()
 		wait1Msec(50);
 
     goRight();
-    forward(2, rotations, 50);
+    forward(3, rotations, 50);
     findLine();
 
     forward(1, rotations, 50);
@@ -55,10 +55,11 @@ task main()
     forward(1, rotations, 50);
     findLine();
 
+    forward(.5, rotations, 50);
     findLine();
-
+    forward(.5, rotations, 50);
     findLine();
-
+    forward(.5, rotations, 50);
     findLine();
 
 
