@@ -59,8 +59,7 @@ task main()
     findLine();
     forward(.5, rotations, 50);
     findLine();
-    forward(.5, rotations, 50);
-    findLine();
+
 
 
     forward(1.25, rotations, 50);
