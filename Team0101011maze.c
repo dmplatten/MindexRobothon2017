@@ -40,17 +40,17 @@ task main()
     forward(3, rotations, 50);
     findLine();
 
-    forward(1, rotations, 50);
+    forward(1.25, rotations, 50);
     goLeft();
     forward(1, rotations, 50);
     findLine();
 
-    forward(1, rotations, 50);
+    forward(1.25, rotations, 50);
     goLeft();
     forward(1, rotations, 50);
     findLine();
 
-    forward(1, rotations, 50);
+    forward(1.25, rotations, 50);
     goRight();
     forward(1, rotations, 50);
     findLine();
@@ -63,17 +63,17 @@ task main()
     findLine();
 
 
-    forward(1, rotations, 50);
+    forward(1.25, rotations, 50);
     goRight();
     findLine();
 
-    forward(1, rotations, 50);
+    forward(1.25, rotations, 50);
     goRight();
     findLine();
 
 
 
-    forward(1, rotations, 50);
+    forward(1.25, rotations, 50);
     goLeft();
     forward(1, rotations, 50);
     findLine();
