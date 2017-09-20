@@ -6,13 +6,13 @@
 
 void goRight()
 {
-		turnRight(155, degrees, 25);
+		turnRight(156, degrees, 25);
 
 }
 
 void goLeft()
 {
-		turnLeft(155, degrees, 25);
+		turnLeft(156, degrees, 25);
 
 }
 
