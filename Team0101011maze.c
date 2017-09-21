@@ -10,25 +10,19 @@ void goRight(float clearance)
 {
 		forward(clearance, rotations, speedvalue);
 		turnRight(158.1, degrees, 15);
-
 }
-
 
 void goLeft(float clearance)
 {
 		forward(clearance, rotations, speedvalue);
 		turnLeft(158.1, degrees, 15);
-
 }
 
 void goForward()
 {
 		//forward(0.125, rotations, 50);
 		forward(0.049, seconds, speedvalue);
-
 }
-
-
 
 void findLine()
 {
@@ -55,32 +49,24 @@ task main()
 
     goRight(1.06);
     findLine();
-    //goSlightRight();
-
 
     forward(.5, rotations, speedvalue);
     findLine();
-    //goSlightRight();
+
     forward(.5, rotations, speedvalue);
     findLine();
-
-
 
     goRight(clearance);
     findLine();
 
     goRight(clearance);
     findLine();
-
-
 
     goLeft(1.20);
     findLine();
-
 
     goLeft(clearance);
     findLine();
 
     forward(.3, rotations, speedvalue);
-
 }
