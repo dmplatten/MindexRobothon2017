@@ -3,23 +3,28 @@
 
 //#pragma config(Sensor, S3, lightSensor, sensorLightActive)
 
+int speedvalue = 58;
+float clearance = 1.25;
 
-void goRight()
+void goRight(float clearance)
 {
-		turnRight(156, degrees, 25);
+		forward(clearance, rotations, speedvalue);
+		turnRight(158.1, degrees, 15);
 
 }
 
-void goLeft()
+
+void goLeft(float clearance)
 {
-		turnLeft(156, degrees, 25);
+		forward(clearance, rotations, speedvalue);
+		turnLeft(158.1, degrees, 15);
 
 }
 
 void goForward()
 {
 		//forward(0.125, rotations, 50);
-		forward(0.05, seconds, 60);
+		forward(0.049, seconds, speedvalue);
 
 }
 
@@ -38,52 +43,44 @@ task main()
 {
 		wait1Msec(50);
 
-    goRight();
-    forward(3, rotations, 50);
+		turnRight(158.1, degrees, 15);
+    forward(3, rotations, speedvalue);
     findLine();
 
-    forward(1.25, rotations, 50);
-    goLeft();
-    forward(1, rotations, 50);
+    goLeft(1.35);
     findLine();
 
-    forward(1.25, rotations, 50);
-    goLeft();
-    forward(1, rotations, 50);
+    goLeft(1.20);
     findLine();
 
-    forward(1, rotations, 50);
-    goRight();
-    forward(1, rotations, 50);
+    goRight(1.06);
     findLine();
+    //goSlightRight();
 
-    forward(.5, rotations, 50);
+
+    forward(.5, rotations, speedvalue);
     findLine();
-    forward(.5, rotations, 50);
+    //goSlightRight();
+    forward(.5, rotations, speedvalue);
     findLine();
 
 
 
-    forward(1.25, rotations, 50);
-    goRight();
+    goRight(clearance);
     findLine();
 
-    forward(1.25, rotations, 50);
-    goRight();
-    findLine();
-
-
-
-    forward(1.25, rotations, 50);
-    goLeft();
-    forward(1, rotations, 50);
+    goRight(clearance);
     findLine();
 
 
-    forward(1.25, rotations, 50);
-    goLeft();
+
+    goLeft(1.20);
     findLine();
 
-    forward(.5, rotations, 50);
+
+    goLeft(clearance);
+    findLine();
+
+    forward(.3, rotations, speedvalue);
 
 }
