@@ -10,7 +10,7 @@ short stopNow = 25;
 short stopCloser = 15;
 short son1 = 0;
 short bigTurn = 159;
-short medTurn = 79;
+short medTurn = 79.5;
 short minTurn = 39;
 short micTurn = 19;
 const int padlen = 8;
@@ -90,7 +90,8 @@ void proceed()
 	while (SensorValue(sonar) > stopNow)
 	{
 		resetTimer(T1);
-		while ((SensorValue(sonar) > stopNow) | (ct1 > 2000))
+		ct1 = 0;
+		while ((SensorValue(sonar) > stopNow) & (ct1 < 5000))
 		{
 			goForward();
 			ct1 = getTimer(T1, milliseconds);
