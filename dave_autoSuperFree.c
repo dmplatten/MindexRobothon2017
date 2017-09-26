@@ -5,82 +5,24 @@ int speedvalue = 60;
 int turnSpeed = 15;
 short facing = 0;  //direction robot is facing
 short gyro1 = 0;
-short openPath = 35;
+short openPath = 31;
 short stopNow = 25;
 short stopCloser = 15;
-short son1 = 0;
-short bigTurn = 159;
 short medTurn = 79.5;
-short minTurn = 39;
-short micTurn = 19;
-const int padlen = 8;
-short padson1[padlen];
-const int sonmax = 32;
+const int sonmax = 4;
 short sondir[sonmax][2];
-short north, south, east, west = 0;
-
-
-void faceDirection(short gd)
-{
-	//gd = gyro direction
-	gyro1 = SensorValue(gyro);
-	while (gyro1 < gd - 3 | gyro1 > gd + 3)
-	{
-		gyro1 = SensorValue(gyro);
-		if (gyro1 < gd - 3)
-		{
-			turnRight(5, degrees, turnSpeed);
-		}
-		else if (gyro1 > gd + 3)
-		{
-			turnLeft(5, degrees, turnSpeed);
-		}
-	}
-}
-
-
-void goBackward()
-{
-	backward(0.1, rotations, speedvalue);
-}
-
-void readSensor()
-{
-	waitUntilMotorStop(leftMotor);
-	waitUntilMotorStop(rightMotor);
-	son1 = SensorValue(sonar);
-	gyro1 = SensorValue(gyro);
-}
-
-void checkTooClose()
-{
-	son1 = SensorValue(sonar);
-	if (son1 < stopCloser)
-	{
-		goBackward();
-	}
-}
-
-
-void goLeft(short amt)
-{
-	checkTooClose();
-	turnLeft(amt, degrees, turnSpeed);
-	readSensor();
-
-}
-
-void goRight(short amt)
-{
-	checkTooClose();
-	turnRight(amt, degrees, turnSpeed);
-	readSensor();
-
-}
+short northdir = 0;
+short southdir = 0;
+short eastdir = 0;
+short westdir = 0;
+short northdist = 0;
+short southdist = 0;
+short eastdist = 0;
+short westdist = 0;
+short godir = 0;
 
 void goForward()
 {
-
 	forward(0.049, seconds, speedvalue);
 }
 
@@ -90,216 +32,286 @@ void getCloser()
 	{
 		goForward();
 	}
-
 }
 
 
-void getPadding()
+void goBackward()
 {
-	for (int i1 = 0; i1 < padlen; i1++)
-  {
-     goRight(medTurn);
-     padson1[i1] = son1;
-  }
+	backward(0.1, rotations, speedvalue);
 }
 
 
-void superLook()
+void faceDirection(short gd)
 {
-	for (int i1 = 0; i1 < sonmax; i1++)
-  {
-     turnRight(25, degrees, turnSpeed);
-     sondir[i1][0] = SensorValue(sonar);
-     sondir[i1][1] = SensorValue(gyro);
-  }
-  turnLeft(620, degrees, turnSpeed);
-  faceDirection(facing);
+	//gd = gyro direction
+	gyro1 = SensorValue(gyro);
+	while ((gyro1 < gd - 400) | (gyro1 > gd + 400))
+	{
+		gyro1 = SensorValue(gyro);
+		if (gyro1 < gd - 400)
+		{
+			turnRight(medTurn, degrees, turnSpeed);
+		}
+		else if (gyro1 > gd + 400)
+		{
+			turnLeft(medTurn, degrees, turnSpeed);
+		}
+	}
+
+	while ((gyro1 < gd - 2) | (gyro1 > gd + 2))
+	{
+		gyro1 = SensorValue(gyro);
+		if (gyro1 < gd - 2)
+		{
+			turnRight(5, degrees, turnSpeed);
+		}
+		else if (gyro1 > gd + 2)
+		{
+			turnLeft(5, degrees, turnSpeed);
+		}
+	}
 }
+
+short getFacingDir(short f1)
+{
+	short result = 0;
+
+	if ((f1 >= 450) & (f1 < 1350))  //east
+  {
+   	result = 900;
+  }
+  else if ((f1 >= 1350) & (f1 < 2250))  //south
+  {
+   	result = 1800;
+	}
+	else if ((f1 >= 2250) & (f1 < 3150))  //west
+	{
+   	result = 2700;
+	}
+	else  //north
+	{
+   	result = 0;
+	}
+	return result;
+}
+
 
 
 void analyze()
 {
-	short dir = 0;
-	short dist = 0;
+	short adir = 0;
+	short adist = 0;
+
+	northdir = 0;
+	southdir = 0;
+	eastdir = 0;
+	westdir = 0;
+
+	northdist = 0;
+	southdist = 0;
+	eastdist = 0;
+	westdist = 0;
+
 	for (int i1 = 0; i1 < sonmax; i1++)
   {
-  	dir = sondir[i1][1];
-  	dist = sondir[i1][0];
-    if (dir >= 450 & dir < 1350)  //east
+  	adir = sondir[i1][1];
+  	adist = sondir[i1][0];
+    if ((adir >= 450) & (adir < 1350))  //east
     {
+    	if (adist > eastdist)
+    	{
+    		eastdist = adist;
+    		eastdir = adir;
+    	}
     }
-    else if (dir >= 1350 & dir < 2250)  //south
+    else if ((adir >= 1350) & (adir < 2250))  //south
     {
+    	if (adist > southdist)
+    	{
+    		southdist = adist;
+    		southdir = adir;
+    	}
     }
-    else if (dir >= 2250 & dir < 3150)  //west
+    else if (adir >= 2250 & adir < 3150)  //west
     {
+    	if (adist > westdist)
+    	{
+    		westdist = adist;
+    		westdir = adir;
+    	}
     }
     else  //north
     {
+    	if (adist > northdist)
+    	{
+    		northdist = adist;
+    		northdir = adir;
+    	}
     }
-
-
   }
-  faceDirection(dir);
 }
 
+void superLook()
+{
+	faceDirection(0);
+	sondir[0][0] = SensorValue(sonar);
+  sondir[0][1] = SensorValue(gyro);
+	for (int i1 = 1; i1 < sonmax; i1++)
+  {
+  	turnRight(159, degrees, turnSpeed);
+  	waitUntilMotorStop(motorA);
+  	waitUntilMotorStop(motorB);
+    sondir[i1][0] = SensorValue(sonar);
+    sondir[i1][1] = SensorValue(gyro);
+  }
+  faceDirection(facing);
+}
 
+short decide()
+{
+	short ddir;
+
+	switch (getFacingDir(facing))
+	{
+		case 0:
+		{
+			if (eastdist > openPath)
+			{
+				ddir = eastdir;
+			}
+			else if (northdist > openPath)
+			{
+				ddir = northdir;
+			}
+			else if (westdir > openPath)
+			{
+				ddir = westdir;
+			}
+			else
+			{
+				ddir = 9999;
+			}
+			break;
+		}
+		case 900:
+		{
+			if (southdist > openPath)
+			{
+				ddir = southdir;
+			}
+
+			else if (eastdist > openPath)
+			{
+				ddir = eastdir;
+			}
+			else if (northdist > openPath)
+			{
+				ddir = northdir;
+			}
+			else
+			{
+				ddir = 9999;
+			}
+			break;
+		}
+		case 1800:
+		{
+			if (westdir > openPath)
+			{
+				ddir = westdir;
+			}
+
+			else if (southdist > openPath)
+			{
+				ddir = southdir;
+			}
+
+			else if (eastdist > openPath)
+			{
+				ddir = eastdir;
+			}
+			else
+			{
+				ddir = 9999;
+			}
+
+			break;
+		}
+		case 2700:
+		{
+			if (northdist > openPath)
+			{
+				ddir = northdir;
+			}
+
+			else if (westdir > openPath)
+			{
+				ddir = westdir;
+			}
+
+			else if (southdist > openPath)
+			{
+				ddir = southdir;
+			}
+
+			else
+			{
+				ddir = 9999;
+			}
+		}
+	}
+	return ddir;
+}
 
 void proceed()
 {
-	int ct1 = 0;
-
-
+	facing = SensorValue(gyro);
 	while (SensorValue(sonar) > stopNow)
 	{
-		resetTimer(T1);
-		ct1 = 0;
-		while ((SensorValue(sonar) > stopNow) & (ct1 < 5000))
-		{
-			goForward();
-			ct1 = getTimer(T1, milliseconds);
-		}
-		//getPadding();
-	}
-	facing = SensorValue(gyro);
-}
-
-
-bool lookRight()
-{
-	bool found = true;
-	son1 = SensorValue(sonar);
-	while ((son1 < openPath))
-	{
-		if (SensorValue(gyro) > (facing + 500))
-		{
-			found = false;
-			break;
-		}
-
-		goRight(minTurn);
-
-		son1 = SensorValue(sonar);
-	}
-	return found;
-}
-
-
-void lookFarRight()
-{
-
-	son1 = SensorValue(sonar);
-	while ((son1 < openPath))
-	{
-  	goRight(minTurn);
-
-		son1 = SensorValue(sonar);
+		goForward();
 	}
 }
-
-
-bool lookLeft()
-{
-	bool found = true;
-	goLeft(minTurn);
-
-	son1 = SensorValue(sonar);
-	if (son1 < openPath)
-	{
-		found = false;
-	}
-	return found;
-}
-
-
-bool firstLook()
-{
-	bool found = true;
-	goRight(bigTurn);
-
-	if (son1 < openPath)
-	{
-		goLeft(bigTurn * 2);
-
-		if (son1 < openPath)
-		{
-			goRight(bigTurn); //back to orig heading
-			found = false;
-		}
-	}
-	return found;
-}
-
-
-bool secondLook()
-{
-	bool found = true;
-	goRight(medTurn);
-
-	if (son1 < openPath)
-	{
-		goRight(medTurn);
-
-
-		if (son1 < openPath)
-		{
-			goLeft(bigTurn);
-			goLeft(medTurn);
-
-			if (son1 < openPath)
-			{
-				goLeft(medTurn);
-				if (son1 < openPath)
-				{
-					found = false;
-					goRight(bigTurn);  //return to orig
-				}
-			}
-		}
-	}
-	return found;
-}
-
-
-
 
 void lookAround()
 {
-	son1 = SensorValue(sonar);
-
-	superLook();
-	return;
-
-	if (firstLook() != true)
-	{
-		getCloser();
-		if (secondLook() != true)
-		{
-			if (lookRight() != true)
-			{
-				if (lookLeft() != true)
-				{
-					lookFarRight();
-				}
-			}
-		}
-	}
+		superLook();
 }
-
 
 void whichWay()
 {
 	lookAround();
+	analyze();
+	godir = decide();
+	if (godir == 9999)
+	{
+
+		getCloser();
+		lookAround();
+		analyze();
+		godir = decide();
+		if (godir == 9999)
+		{
+			getCloser();
+			lookAround();
+			analyze();
+			godir = decide();
+			if (godir == 9999)
+			{
+				godir = facing + 1800;
+			}
+		}
+
+	}
+
+	faceDirection(godir);
 }
 
 task main()
 {
 	wait1Msec(50);
-	bool go1 = true;
-	while (go1 == true)
+	while (true)
 	{
 		whichWay();
 		proceed();
-		go1 = false;
 	}
 }
