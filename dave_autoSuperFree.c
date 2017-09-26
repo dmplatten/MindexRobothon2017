@@ -5,10 +5,10 @@ int speedvalue = 60;
 int turnSpeed = 15;
 short facing = 0;  //direction robot is facing
 short gyro1 = 0;
-short openPath = 31;
+short openPath = 35;
 short stopNow = 25;
 short stopCloser = 15;
-short medTurn = 79.5;
+short medTurn = 79;
 const int sonmax = 4;
 short sondir[sonmax][2];
 short northdir = 0;
@@ -183,7 +183,7 @@ short decide()
 			{
 				ddir = northdir;
 			}
-			else if (westdir > openPath)
+			else if (westdist > openPath)
 			{
 				ddir = westdir;
 			}
@@ -216,7 +216,7 @@ short decide()
 		}
 		case 1800:
 		{
-			if (westdir > openPath)
+			if (westdist > openPath)
 			{
 				ddir = westdir;
 			}
@@ -244,7 +244,7 @@ short decide()
 				ddir = northdir;
 			}
 
-			else if (westdir > openPath)
+			else if (westdist > openPath)
 			{
 				ddir = westdir;
 			}
