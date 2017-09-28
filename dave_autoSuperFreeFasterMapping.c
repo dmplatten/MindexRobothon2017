@@ -5,6 +5,7 @@
 int speedvalue = 60;
 int turnSpeed = 20;
 short facing = 0;  //direction robot is facing
+short facingdir = 0;
 short gyro1 = 0;
 short openPath = 35;
 short stopNow = 25;
@@ -20,17 +21,61 @@ short southdist = 0;
 short eastdist = 0;
 short westdist = 0;
 short godir = 0;
-const int mapmax = 500;
-short map[mapmax][6];  //facing, north, east, south, west
+const int mapmax = 3000;
+short map[mapmax][2];  //facing, north, east, south, west
 int mapidx = -1;
-short fwdcnt = 0;
+short xco = 0;
+short yco = 0;
 
 
+void updatePos()
+{
+	switch (facingdir)
+	{
+		case 0:
+			yco ++;
+			break;
+		case 900:
+			xco ++;
+			break;
+		case 1800:
+			yco --;
+			break;
+		case 2700:
+			xco --;
+	}
+}
+
+
+bool checkPoint()
+{
+	bool ok = true;
+	switch (facingdir)
+	{
+		case 0:
+			break;
+		case 900:
+			break;
+		case 1800:
+			break;
+		case 2700:
+			break;
+	}
+	return ok;
+}
+
+
+void markMap()
+{
+	mapidx ++;
+	map[mapidx][0] = xco;
+	map[mapidx][1] = yco;
+}
 
 void goForward()
 {
 	forward(0.049, seconds, speedvalue);
-	fwdcnt ++;
+	markMap();
 }
 
 void getCloser()
@@ -101,18 +146,6 @@ short getFacingDir(short f1)
 	return result;
 }
 
-void writeMap()
-{
-	mapidx ++;
-	map[mapidx][0] = getFacingDir(facing);
-	map[mapidx][1] = fwdcnt;
-	map[mapidx][2] = northdist;
-	map[mapidx][3] = eastdist;
-	map[mapidx][4] = southdist;
-	map[mapidx][5] = westdist;
-}
-
-
 void analyze()
 {
 	short adir = 0;
@@ -165,7 +198,7 @@ void analyze()
     	}
     }
   }
-  writeMap();
+
 }
 
 void superLook()
@@ -185,77 +218,29 @@ void superLook()
 }
 
 
-bool Repeating()
-{
-	bool answer = true;
-	if (mapidx > 9)  //don't check too early
-	{
-		for (int i1 = 0; i1 < 4; i1++)
-		{
-			if (map[mapidx - i1][0] != map[mapidx - (4+i1)][0])  //dir
-			{
-				answer = false;
-				break;
-			}
-			if (abs(map[mapidx - i1][1] - map[mapidx - (4+i1)][1]) > 5 )  //distance
-			{
-				answer = false;
-				break;
-			}
-			if (abs(map[mapidx - i1][1] - map[mapidx - (4+i1)][1]) > 5 )  //north
-			{
-				answer = false;
-				break;
-			}
-			if (abs(map[mapidx - i1][1] - map[mapidx - (4+i1)][1]) > 5 )  //east
-			{
-				answer = false;
-				break;
-			}
-			if (abs(map[mapidx - i1][1] - map[mapidx - (4+i1)][1]) > 5 )  //south
-			{
-				answer = false;
-				break;
-			}
-			if (abs(map[mapidx - i1][1] - map[mapidx - (4+i1)][1]) > 5 )  //west
-			{
-				answer = false;
-				break;
-			}
-		}
-	}
-	else
-	{
-		answer = false;
-	}
-	return answer;
-}
+
 
 
 
 short decide()
 {
 	short ddir;
-	short nodir = -900;
-	bool rep = Repeating();
-	if (rep != false)
-	{
-		nodir = map[mapidx - 3][0]; //dir of next turn
-	}
 
-	switch (getFacingDir(facing))
+
+
+	switch (facingdir)
 	{
 		case 0:
 		{
-			if ((eastdist > openPath) & (eastdir != nodir))
+			if ((eastdist > openPath))
 			{
 				ddir = eastdir;
 			}
-			else if ((northdist > openPath) & (northdir != nodir))
+			else if ((northdist > openPath))
 			{
 				ddir = northdir;
 			}
-			else if ((westdist > openPath) & (westdir != nodir))
+			else if ((westdist > openPath))
 			{
 				ddir = westdir;
 			}
@@ -267,16 +252,16 @@ short decide()
 		}
 		case 900:
 		{
-			if ((southdist > openPath) & (southdir != nodir))
+			if ((southdist > openPath))
 			{
 				ddir = southdir;
 			}
 
-			else if ((eastdist > openPath) & (eastdir != nodir))
+			else if ((eastdist > openPath))
 			{
 				ddir = eastdir;
 			}
-			else if ((northdist > openPath) & (northdir != nodir))
+			else if ((northdist > openPath))
 			{
 				ddir = northdir;
 			}
@@ -288,17 +273,17 @@ short decide()
 		}
 		case 1800:
 		{
-			if ((westdist > openPath) & (westdir != nodir))
+			if ((westdist > openPath))
 			{
 				ddir = westdir;
 			}
 
-			else if ((southdist > openPath) & (southdir != nodir))
+			else if ((southdist > openPath))
 			{
 				ddir = southdir;
 			}
 
-			else if ((eastdist > openPath) & (eastdir != nodir))
+			else if ((eastdist > openPath))
 			{
 				ddir = eastdir;
 			}
@@ -311,17 +296,17 @@ short decide()
 		}
 		case 2700:
 		{
-			if ((northdist > openPath) & (northdir != nodir))
+			if ((northdist > openPath))
 			{
 				ddir = northdir;
 			}
 
-			else if ((westdist > openPath) & (westdir != nodir))
+			else if ((westdist > openPath))
 			{
 				ddir = westdir;
 			}
 
-			else if ((southdist > openPath) & (southdir != nodir))
+			else if ((southdist > openPath))
 			{
 				ddir = southdir;
 			}
@@ -338,7 +323,7 @@ short decide()
 void proceed()
 {
 	facing = SensorValue(gyro);
-	fwdcnt = 0;
+	facingdir = getFacingDir(facing);
 
 	while ((SensorValue(sonar) > stopNow) & (SensorValue(light) >= 65))
 	{
@@ -385,6 +370,7 @@ void whichWay()
 task main()
 {
 	wait1Msec(50);
+	markMap();
 	while (true)
 	{
 		whichWay();
