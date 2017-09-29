@@ -75,6 +75,7 @@ void markMap()
 void goForward()
 {
 	forward(0.049, seconds, speedvalue);
+	updatePos();
 	markMap();
 }
 
